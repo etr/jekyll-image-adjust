@@ -11,7 +11,7 @@ module Jekyll
       hash = Digest::SHA256.file(src_path)
       short_hash = hash.hexdigest()[0, HASH_LENGTH]
       options_slug = options.gsub(/[^\da-z]+/i, "")
-      ext = File.extname(src_path)
+      ext = '.webp'
 
       "#{short_hash}_#{options_slug}#{ext}"
     end
@@ -42,6 +42,7 @@ module Jekyll
 
       image.strip
       image.resize options
+      image.format 'webp'
 
       image.write dest_path
     end
