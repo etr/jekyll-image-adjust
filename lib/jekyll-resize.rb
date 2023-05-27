@@ -43,6 +43,7 @@ module Jekyll
       image.strip
       image.resize options
       image.format 'webp'
+      image.quality '80'
 
       image.write dest_path
     end
