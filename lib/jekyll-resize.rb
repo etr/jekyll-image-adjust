@@ -81,3 +81,10 @@ module Jekyll
 end
 
 Liquid::Template.register_filter(Jekyll::Resize)
+
+Jekyll::Hooks.register :site, :after_init do |site|
+  gem_includes = File.expand_path("../_includes", __dir__)
+  if Dir.exist?(gem_includes)
+    site.includes_load_paths << gem_includes
+  end
+end

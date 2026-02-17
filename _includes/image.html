@@ -1,0 +1,65 @@
+{% if include.max-width %}
+  {% assign max_width = include.max-width %}
+{% elsif include.max_width %}
+  {% assign max_width = include.max_width %}
+{% endif %}
+
+{% if max_width %}
+{% assign inline_style = "max-width: min(100%, " | append: max_width | append: ");" %}
+{% endif %}
+
+{% if include.float %}
+{% assign inline_style = inline_style | append: " float:" | append: include.float | append: ";" %}
+{% endif %}
+
+{% assign width_s = max_width | replace: "px", "" %}
+
+{% assign srcset = "" %}
+
+{% for size in include.extra_sizes %}
+  {% assign no_px_size = size | replace: "px", "" %}
+  {% assign new_size = include.url | resize: no_px_size | append: " " | append: no_px_size | append: "w" %}
+
+  {% if srcset == "" %}
+    {% assign srcset = new_size %}
+  {% else %}
+    {% assign srcset = srcset | append: "," | append: new_size %}
+  {% endif %}
+{% endfor %}
+
+{% if include.alt-text %}
+  {% assign alt_text = include.alt-text %}
+{% elsif include.description %}
+  {% assign alt_text = include.description %}
+{% else %}
+  {% assign alt_text = include.url %}
+{% endif %}
+
+<figure class="image {{ include.class }}" style="{{ inline_style }}">
+  {% if include.link %}
+  <a href="{{ include.link }}" title="{{ include.description }}">
+  {% endif %}
+  {% if max_width %}
+    <img
+      src="{{ include.url | resize: width_s }}"
+      {% if include.extra_sizes %}
+      srcset="{{ srcset }}"
+      {% endif %}
+      alt="{{ alt_text }}"
+      title="{{ include.description }}"
+    />
+  {% else %}
+    <img src="{{ include.url }}" alt="{{ alt_text }}" />
+  {% endif %}
+
+  {% if include.description != nil and include.description != '' %}
+  {% if max_width %}
+  <figcaption style="max-width: {{ max_width }}">{{ include.description }}</figcaption>
+  {% else %}
+  <figcaption>{{ include.description }}</figcaption>
+  {% endif %}
+  {% endif %}
+  {% if include.link %}
+  </a>
+  {% endif %}
+</figure>
